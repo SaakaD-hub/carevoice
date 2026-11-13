@@ -1,0 +1,25 @@
+name: Task / feature
+description: A piece of work to build
+labels: [task]
+body:
+  - type: dropdown
+    id: module
+    attributes:
+      label: Module
+      options: [M1 Discharge Baseline, M2 Voice Intake, M3 Note Structurer, M4 Risk Engine, M5 Escalation, M6 Family Portal, M7 Dashboards, M8 Stretch, Infra, Docs, Demo / Video]
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: What needs to be built
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Done when
+      description: How we know it's finished (tests, behavior, demo step)
+      placeholder: "- Unit tests cover ...\n- Nurse console shows ..."
+    validations:
+      required: true

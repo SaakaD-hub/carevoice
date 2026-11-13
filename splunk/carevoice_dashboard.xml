@@ -1,0 +1,74 @@
+<dashboard version="1.1" theme="light">
+  <label>CareVoice Operations</label>
+  <description>Health and activity of the CareVoice app</description>
+  <fieldset submitButton="false">
+    <input type="time" token="t">
+      <label>Time range</label>
+      <default>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>Errors</title>
+      <single>
+        <search>
+          <query>index=main source=carevoice | spath input=line | search log.level=ERROR | stats count</query>
+          <earliest>$t.earliest$</earliest>
+          <latest>$t.latest$</latest>
+        </search>
+        <option name="rangeColors">["0x53a051","0xdc4e41"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Risk flags raised</title>
+      <single>
+        <search>
+          <query>index=main source=carevoice "risk flag raised" | stats count</query>
+          <earliest>$t.earliest$</earliest>
+          <latest>$t.latest$</latest>
+        </search>
+      </single>
+    </panel>
+    <panel>
+      <title>Escalations</title>
+      <single>
+        <search>
+          <query>index=main source=carevoice "task escalated" | stats count</query>
+          <earliest>$t.earliest$</earliest>
+          <latest>$t.latest$</latest>
+        </search>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Log volume by level</title>
+      <chart>
+        <search>
+          <query>index=main source=carevoice | spath input=line | timechart span=15m count by log.level</query>
+          <earliest>$t.earliest$</earliest>
+          <latest>$t.latest$</latest>
+        </search>
+        <option name="charting.chart">column</option>
+        <option name="charting.chart.stackMode">stacked</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Recent errors</title>
+      <table>
+        <search>
+          <query>index=main source=carevoice | spath input=line | search log.level=ERROR | table _time tag log.logger message | head 20</query>
+          <earliest>$t.earliest$</earliest>
+          <latest>$t.latest$</latest>
+        </search>
+      </table>
+    </panel>
+  </row>
+</dashboard>

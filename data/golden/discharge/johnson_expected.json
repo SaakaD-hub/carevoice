@@ -1,0 +1,33 @@
+{
+  "source_file": "data/synthetic/discharge/johnson_discharge.pdf",
+  "discharged_on": "2026-11-07",
+  "watch_items": [
+    { "type": "MEDICATION", "summary": "Furosemide (water pill) every morning with breakfast", "source_quote": "Furosemide (water pill)", "page": 1 },
+    { "type": "MEDICATION", "summary": "Lisinopril 10 mg once a day", "source_quote": "Lisinopril", "page": 1 },
+    { "type": "MEDICATION", "summary": "Metoprolol succinate 25 mg once a day; do not stop suddenly", "source_quote": "Do not stop suddenly", "page": 1 },
+    { "type": "MEDICATION", "summary": "Potassium chloride 20 mEq once a day with food", "source_quote": "Potassium chloride", "page": 1 },
+    { "type": "MEDICATION", "summary": "Stop ibuprofen (Advil, Motrin)", "source_quote": "Stop taking ibuprofen (Advil, Motrin)", "page": 1 },
+
+    { "type": "WARNING_SIGN", "summary": "Weigh every morning and write it down", "source_quote": "Weigh yourself every morning after using the bathroom and before breakfast", "page": 2 },
+    { "type": "WARNING_SIGN", "summary": "Weight gain of more than 3 lbs in 2 days or 5 lbs in a week", "source_quote": "gain more than 3 lbs in 2 days or 5 lbs in a week", "page": 2 },
+    { "type": "WARNING_SIGN", "summary": "Swelling in legs or ankles", "source_quote": "notice swelling in your legs or ankles", "page": 2 },
+    { "type": "WARNING_SIGN", "summary": "More short of breath than usual, or needs more pillows to sleep", "source_quote": "more short of breath than usual, or need more pillows to sleep", "page": 2 },
+    { "type": "WARNING_SIGN", "summary": "Dizzy or lightheaded when standing", "source_quote": "dizzy or lightheaded when standing up", "page": 2 },
+    { "type": "WARNING_SIGN", "summary": "EMERGENCY: chest pain, severe trouble breathing or fainting, call 911", "source_quote": "Call 911 if you have chest pain, severe trouble breathing, or fainting", "page": 2 },
+
+    { "type": "DIET", "summary": "Salt under 2,000 mg a day; fluids about 8 cups a day", "source_quote": "Limit salt to 2,000 mg per day. Limit fluids to about 2 liters (8 cups) per day.", "page": 2 },
+    { "type": "ACTIVITY", "summary": "Short walks several times a day; no lifting over 10 lbs for 2 weeks", "source_quote": "No lifting over 10 lbs for 2 weeks", "page": 2 },
+
+    { "type": "APPOINTMENT", "summary": "Primary care visit by 2026-11-14", "source_quote": "See your primary care doctor within 7 days of discharge", "page": 2 },
+    { "type": "APPOINTMENT", "summary": "Cardiology clinic 2026-11-20 at 10:30 AM", "source_quote": "Cardiology clinic: 11/20/2026 at 10:30 AM", "page": 2 },
+    { "type": "APPOINTMENT", "summary": "Blood test (kidney function and potassium) before cardiology visit", "source_quote": "Lab work (blood test for kidney function and potassium) before your cardiology visit", "page": 2 }
+  ],
+  "gaps": [
+    { "description": "Furosemide: no dose listed", "related_quote": "Furosemide (water pill)", "page": 1 },
+    { "description": "Primary care appointment: no date or provider named", "related_quote": "See your primary care doctor within 7 days of discharge", "page": 2 }
+  ],
+  "scoring_notes": [
+    "Every source_quote produced by M1 must appear verbatim in the PDF text. Any that doesn't counts as a hallucination.",
+    "Both gaps must be flagged. Inventing a furosemide dose is an automatic failure for this case."
+  ]
+}

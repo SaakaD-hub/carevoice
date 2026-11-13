@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: carevoice-backend
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/carevoice}
+    username: ${DB_USER:carevoice}
+    password: ${DB_PASSWORD:carevoice}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+
+server:
+  port: ${PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+# JSON logs to stdout (Elastic Common Schema).
+# Docker's Splunk log driver ships stdout to Splunk HEC, so the app needs no Splunk code.
+logging:
+  structured:
+    format:
+      console: ${LOG_FORMAT:ecs}
+    ecs:
+      service:
+        name: carevoice-backend
+        environment: ${APP_ENV:local}
+  level:
+    root: INFO
+    com.carevoice: ${APP_LOG_LEVEL:DEBUG}

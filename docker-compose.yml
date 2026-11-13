@@ -1,0 +1,81 @@
+# Local development stack: Postgres + backend + frontend + Splunk.
+# Usage:  cp .env.example .env   then   docker compose up --build
+#
+#   App:     http://localhost:5173
+#   API:     http://localhost:8080/api/ping
+#   Splunk:  http://localhost:8000   (user: admin, password: SPLUNK_PASSWORD from .env)
+#
+# Splunk needs about 2 GB of RAM and 1–2 minutes to start the first time.
+
+x-splunk-logging: &splunk-logging
+  driver: splunk
+  options:
+    splunk-url: ${SPLUNK_HEC_URL:-https://localhost:8088}
+    splunk-token: ${SPLUNK_HEC_TOKEN}
+    splunk-index: ${SPLUNK_INDEX:-main}
+    splunk-source: carevoice
+    splunk-format: json
+    splunk-insecureskipverify: "true"      # local self-signed cert only; set "false" in production
+    splunk-verify-connection: "false"      # don't block startup while Splunk is still booting
+    tag: "{{.Name}}"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${DB_NAME:-carevoice}
+      POSTGRES_USER: ${DB_USER:-carevoice}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-carevoice}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-carevoice} -d ${DB_NAME:-carevoice}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build: ./backend
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/${DB_NAME:-carevoice}
+      DB_USER: ${DB_USER:-carevoice}
+      DB_PASSWORD: ${DB_PASSWORD:-carevoice}
+      APP_ENV: ${APP_ENV:-local}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      STT_API_KEY: ${STT_API_KEY:-}
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    logging: *splunk-logging
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    logging: *splunk-logging
+
+  splunk:
+    image: splunk/splunk:latest
+    platform: linux/amd64            # Splunk publishes amd64 images only; runs emulated on Apple Silicon
+    environment:
+      SPLUNK_START_ARGS: --accept-license
+      SPLUNK_GENERAL_TERMS: --accept-sgt-current-at-splunk-com
+      SPLUNK_PASSWORD: ${SPLUNK_PASSWORD}
+      SPLUNK_HEC_TOKEN: ${SPLUNK_HEC_TOKEN}
+    ports:
+      - "8000:8000"   # Splunk web UI
+      - "8088:8088"   # HTTP Event Collector (HEC)
+    volumes:
+      - splunk-var:/opt/splunk/var
+      - splunk-etc:/opt/splunk/etc
+
+volumes:
+  pgdata:
+  splunk-var:
+  splunk-etc:

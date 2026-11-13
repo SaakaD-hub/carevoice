@@ -1,0 +1,32 @@
+name: Bug report
+description: Something is broken
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to ...
+        2. Click ...
+        3. See error
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Paste relevant log lines or a Splunk search result. Remove any secrets.
+      render: shell
+  - type: dropdown
+    id: module
+    attributes:
+      label: Module
+      options: [M1 Discharge Baseline, M2 Voice Intake, M3 Note Structurer, M4 Risk Engine, M5 Escalation, M6 Family Portal, M7 Dashboards, M8 Stretch, Infra]
