@@ -7,7 +7,7 @@ COPY src ./src
 RUN mvn -q -B package -DskipTests
 
 # ---- run ----
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:24-jre
 WORKDIR /app
 RUN useradd --system --uid 10001 carevoice
 COPY --from=build /app/target/carevoice-backend-*.jar app.jar
